@@ -1,0 +1,60 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+
+  redis:
+    image: redis:7
+
+  cassandra:
+    image: cassandra:4.1
+    environment:
+      CASSANDRA_CLUSTER_NAME: chat-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 100M
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    environment:
+      CLICKHOUSE_DB: chat_analytics
+      CLICKHOUSE_USER: chat_user
+      CLICKHOUSE_PASSWORD: chat_password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+
+  app:
+    build: .
+    depends_on:
+      - kafka
+      - redis
+      - cassandra
+      - clickhouse
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BOOTSTRAP: kafka:29092
+      REDIS_HOST: redis
+      CASSANDRA_HOST: cassandra
+      CASSANDRA_PORT: 9042
+      CASSANDRA_DATACENTER: datacenter1
+      CLICKHOUSE_URL: jdbc:clickhouse://clickhouse:8123/chat_analytics
+      CLICKHOUSE_USER: chat_user
+      CLICKHOUSE_PASSWORD: chat_password
+    restart: on-failure

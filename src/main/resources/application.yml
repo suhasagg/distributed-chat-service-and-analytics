@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:kafka:29092}
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+app:
+  cassandra-host: ${CASSANDRA_HOST:cassandra}
+  cassandra-port: ${CASSANDRA_PORT:9042}
+  cassandra-datacenter: ${CASSANDRA_DATACENTER:datacenter1}
+  clickhouse-url: ${CLICKHOUSE_URL:jdbc:clickhouse://clickhouse:8123/chat_analytics}
+  clickhouse-user: ${CLICKHOUSE_USER:chat_user}
+  clickhouse-password: ${CLICKHOUSE_PASSWORD:chat_password}
