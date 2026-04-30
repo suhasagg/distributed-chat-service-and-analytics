@@ -14,7 +14,7 @@ This project implements:
 - Presence APIs
 - Analytics APIs
 
-- The prototype is intentionally scoped for an assessment/interview demo, but the architecture is shaped like a production system and includes clear paths for scaling, resilience, observability, and cost optimization.
+
 
 ## 1. Problem Statement
 
