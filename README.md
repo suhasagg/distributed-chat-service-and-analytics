@@ -122,14 +122,13 @@ The system separates:
 - Cassandra startup retry logic
 - ClickHouse schema initialization
 - Reduced host port conflicts by exposing only API port
-- Assessment bonus features included
 - Cassandra data modeling
 - Kafka event pipeline
 - Redis presence model
 - ClickHouse analytics model
 - Production readiness guidance
 - Cost optimization guidance
-- Interview talking points
+
 
 ## 4. Consistency Model
 
